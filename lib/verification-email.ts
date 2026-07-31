@@ -88,6 +88,17 @@ export function buildEmailHtml(variant: EmailVariant, code = "{{code}}"): string
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="x-apple-disable-message-reformatting" />
   <title>${c.subject}</title>
+  <style>
+    /* Responsive tweaks — supported by Apple Mail, Gmail app en de meeste
+       mobiele clients; overige clients vallen terug op de max-width. */
+    @media only screen and (max-width: 480px) {
+      .gb-container { width: 100% !important; border-radius: 0 !important; border-left: 0 !important; border-right: 0 !important; }
+      .gb-pad { padding-left: 20px !important; padding-right: 20px !important; }
+      .gb-code { font-size: 34px !important; letter-spacing: 8px !important; }
+      .gb-heading { font-size: 22px !important; }
+      .gb-brandmark { display: none !important; }
+    }
+  </style>
 </head>
 <body style="margin:0; padding:0; width:100%; background-color:${brand.background};">
   <div style="display:none; max-height:0; overflow:hidden; opacity:0; font-size:1px; line-height:1px; color:${brand.background};">
@@ -96,16 +107,16 @@ export function buildEmailHtml(variant: EmailVariant, code = "{{code}}"): string
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:${brand.background};">
     <tr>
       <td align="center" style="padding:32px 16px;">
-        <table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0" style="width:600px; max-width:600px; background-color:${brand.card}; border:1px solid ${brand.border}; border-radius:16px; overflow:hidden;">
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" class="gb-container" style="width:100%; max-width:600px; background-color:${brand.card}; border:1px solid ${brand.border}; border-radius:16px; overflow:hidden;">
           <!-- Header -->
           <tr>
-            <td style="background-color:${brand.card}; padding:24px 32px;">
+            <td class="gb-pad" style="background-color:${brand.card}; padding:24px 32px;">
               <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
                 <tr>
                   <td align="left" style="vertical-align:middle;">
                     <img src="${logoUrl}" width="150" alt="Nederlands de Baas" style="display:block; border:0; height:auto; max-width:150px;" />
                   </td>
-                  <td align="right" style="vertical-align:middle; font-family:${fontStack}; font-size:13px; font-weight:700; letter-spacing:1px; color:${brand.navy}; text-transform:uppercase;">
+                  <td align="right" class="gb-brandmark" style="vertical-align:middle; font-family:${fontStack}; font-size:13px; font-weight:700; letter-spacing:1px; color:${brand.navy}; text-transform:uppercase;">
                     Groeibaas
                   </td>
                 </tr>
@@ -116,8 +127,8 @@ export function buildEmailHtml(variant: EmailVariant, code = "{{code}}"): string
           <tr><td style="height:4px; background-color:${brand.teal}; line-height:4px; font-size:0;">&nbsp;</td></tr>
           <!-- Body -->
           <tr>
-            <td style="padding:40px 32px 8px 32px;">
-              <h1 style="margin:0 0 16px 0; font-family:${fontStack}; font-size:24px; line-height:1.3; font-weight:700; color:${brand.navy};">
+            <td class="gb-pad" style="padding:40px 32px 8px 32px;">
+              <h1 class="gb-heading" style="margin:0 0 16px 0; font-family:${fontStack}; font-size:24px; line-height:1.3; font-weight:700; color:${brand.navy};">
                 ${c.title}
               </h1>
               <p style="margin:0 0 24px 0; font-family:${bodyFont}; font-size:16px; line-height:1.6; color:${brand.mutedForeground};">
@@ -127,14 +138,14 @@ export function buildEmailHtml(variant: EmailVariant, code = "{{code}}"): string
           </tr>
           <!-- Code box -->
           <tr>
-            <td style="padding:0 32px 8px 32px;">
+            <td class="gb-pad" style="padding:0 32px 8px 32px;">
               <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:${brand.mint}; border:2px solid ${brand.teal}; border-radius:12px;">
                 <tr>
                   <td align="center" style="padding:24px 16px;">
                     <p style="margin:0 0 8px 0; font-family:${bodyFont}; font-size:12px; font-weight:600; letter-spacing:1px; text-transform:uppercase; color:${brand.mutedForeground};">
                       Verificatiecode
                     </p>
-                    <p style="margin:0; font-family:'Courier New', Courier, monospace; font-size:40px; line-height:1.1; font-weight:700; letter-spacing:10px; color:${brand.navy};">
+                    <p class="gb-code" style="margin:0; font-family:'Courier New', Courier, monospace; font-size:40px; line-height:1.1; font-weight:700; letter-spacing:10px; color:${brand.navy};">
                       ${code}
                     </p>
                   </td>
@@ -147,7 +158,7 @@ export function buildEmailHtml(variant: EmailVariant, code = "{{code}}"): string
           </tr>
           <!-- Security box -->
           <tr>
-            <td style="padding:0 32px 24px 32px;">
+            <td class="gb-pad" style="padding:0 32px 24px 32px;">
               <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:${brand.muted}; border-radius:10px;">
                 <tr>
                   <td style="padding:16px 20px; font-family:${bodyFont}; font-size:14px; line-height:1.6; color:${brand.navy};">
@@ -159,7 +170,7 @@ export function buildEmailHtml(variant: EmailVariant, code = "{{code}}"): string
           </tr>
           <!-- Ignore note -->
           <tr>
-            <td style="padding:0 32px 40px 32px;">
+            <td class="gb-pad" style="padding:0 32px 40px 32px;">
               <p style="margin:0; font-family:${bodyFont}; font-size:14px; line-height:1.6; color:${brand.mutedForeground};">
                 ${c.ignore}
               </p>
@@ -167,7 +178,7 @@ export function buildEmailHtml(variant: EmailVariant, code = "{{code}}"): string
           </tr>
           <!-- Footer -->
           <tr>
-            <td style="background-color:${brand.navy}; padding:28px 32px;">
+            <td class="gb-pad" style="background-color:${brand.navy}; padding:28px 32px;">
               <p style="margin:0 0 4px 0; font-family:${fontStack}; font-size:15px; font-weight:600; color:${brand.primaryForeground};">
                 Nederlands de Baas
               </p>

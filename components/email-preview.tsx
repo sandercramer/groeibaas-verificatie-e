@@ -160,16 +160,16 @@ export function EmailPreview() {
       </div>
 
       {/* Email preview */}
-      <div className="rounded-xl border border-border bg-secondary/40 p-4 sm:p-8">
+      <div className="rounded-xl border border-border bg-secondary/40 p-3 sm:p-8">
         <div
-          className="mx-auto transition-all duration-300"
-          style={{ maxWidth: device === "mobile" ? 380 : 640 }}
+          className="mx-auto w-full transition-all duration-300"
+          style={{ maxWidth: device === "mobile" ? 360 : 640 }}
         >
           <iframe
             key={`${variant}-${device}-${useSample}`}
             title={`Voorbeeld: ${active.label}`}
             srcDoc={previewHtml}
-            className="h-[760px] w-full rounded-lg border border-border bg-white shadow-sm"
+            className="h-[720px] w-full rounded-lg border border-border bg-white shadow-sm sm:h-[820px]"
           />
         </div>
       </div>
