@@ -22,13 +22,13 @@ export default function Page() {
           </div>
           <div className="max-w-2xl">
             <h1 className="text-balance font-serif text-3xl font-bold leading-tight text-primary sm:text-4xl">
-              Verificatiecode e-mail
+              Verification code email
             </h1>
             <p className="mt-3 text-pretty leading-relaxed text-muted-foreground">
-              Een warme, betrouwbare e-mailtemplate in de huisstijl van
-              Nederlands de Baas. Eén basisontwerp met twee inhoudsvarianten:
-              medewerkers en externen. Klaar om te vertalen naar e-mail-safe
-              HTML.
+              A warm, trustworthy email template in the Nederlands de Baas
+              brand style. One base design with two content variants: staff and
+              external users. Ready to export as email-safe HTML. The email
+              copy itself is in Dutch for the recipients.
             </p>
           </div>
         </div>
@@ -39,10 +39,10 @@ export default function Page() {
 
         <section>
           <h2 className="font-serif text-xl font-semibold text-primary">
-            Design-systeem
+            Design system
           </h2>
           <p className="mt-1 text-sm text-muted-foreground">
-            De bouwstenen achter de template.
+            The building blocks behind the template.
           </p>
           <div className="mt-5">
             <DesignSpec />
@@ -52,52 +52,52 @@ export default function Page() {
         {/* Email-safe conversion notes */}
         <section className="rounded-xl border border-border bg-card p-6">
           <h2 className="font-serif text-xl font-semibold text-primary">
-            Omzetten naar e-mail-safe HTML
+            Exporting to email-safe HTML
           </h2>
           <ul className="mt-4 flex flex-col gap-3 text-sm leading-relaxed text-muted-foreground">
             <li className="flex gap-3">
               <span className="mt-2 size-1.5 shrink-0 rounded-full bg-accent" />
               <span>
-                De template is al opgebouwd met een{" "}
-                <strong className="text-primary">table-based layout</strong> en{" "}
-                <strong className="text-primary">inline CSS</strong> — de
-                standaard voor e-mailclients zoals Gmail, Outlook en Apple Mail.
+                The template is built with a{" "}
+                <strong className="text-primary">table-based layout</strong> and{" "}
+                <strong className="text-primary">inline CSS</strong> — the
+                standard for email clients like Gmail, Outlook and Apple Mail.
               </span>
             </li>
             <li className="flex gap-3">
               <span className="mt-2 size-1.5 shrink-0 rounded-full bg-accent" />
               <span>
-                Fonts vallen automatisch terug op{" "}
+                Fonts fall back automatically to{" "}
                 <strong className="text-primary">Arial / Helvetica</strong>.
-                Poppins en Inter zijn optioneel en breken niets als ze niet
-                laden.
+                Poppins and Inter are optional and break nothing if they fail
+                to load.
               </span>
             </li>
             <li className="flex gap-3">
               <span className="mt-2 size-1.5 shrink-0 rounded-full bg-accent" />
               <span>
-                Het logo heeft een{" "}
-                <strong className="text-primary">alt-tekst</strong> en de
-                header/footer tonen ook zonder afbeeldingen de merknaam. De
-                template werkt dus met geblokkeerde afbeeldingen.
+                The logo has{" "}
+                <strong className="text-primary">alt text</strong> and the
+                header/footer show the brand name even without images, so the
+                template still works when images are blocked.
               </span>
             </li>
             <li className="flex gap-3">
               <span className="mt-2 size-1.5 shrink-0 rounded-full bg-accent" />
               <span>
-                Vervang de placeholder{" "}
+                Replace the placeholder{" "}
                 <code className="rounded bg-muted px-1.5 py-0.5 font-mono text-xs text-primary">
                   {"{{code}}"}
                 </code>{" "}
-                in je mailprogramma of ESP met de echte verificatiecode.
+                in your mail program or ESP with the real verification code.
               </span>
             </li>
             <li className="flex gap-3">
               <span className="mt-2 size-1.5 shrink-0 rounded-full bg-accent" />
               <span>
-                Geen JavaScript, geen interactieve componenten — gebruik de{" "}
-                <strong className="text-primary">Kopieer HTML</strong>-knop en
-                plak direct in je template-editor.
+                No JavaScript, no interactive components — use the{" "}
+                <strong className="text-primary">Copy HTML</strong> button and
+                paste straight into your template editor.
               </span>
             </li>
           </ul>

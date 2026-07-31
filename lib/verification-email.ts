@@ -37,8 +37,8 @@ export const logoUrl = "https://concept.nederlandsdebaas.nl/logo-nldb.png"
 
 export const variants: Record<EmailVariant, VariantContent> = {
   medewerkers: {
-    label: "Medewerkers",
-    audience: "Docenten, coördinatoren, administratie, participatiecollega's, jobcoaches en beheerders.",
+    label: "Staff (informal)",
+    audience: "Teachers, coordinators, administration, participation staff, job coaches and admins. Uses informal Dutch (je/jij).",
     subject: "Je verificatiecode voor Groeibaas",
     preheader: "Gebruik deze code om je login bij Groeibaas te bevestigen.",
     title: "Je verificatiecode voor Groeibaas",
@@ -54,8 +54,8 @@ export const variants: Record<EmailVariant, VariantContent> = {
     footerTagline: "Groeibaas – voortgang in taal en participatie",
   },
   externen: {
-    label: "Externen",
-    audience: "Gemeenten, werkgevers, praktijkbegeleiders en andere externe betrokkenen.",
+    label: "External (formal)",
+    audience: "Municipalities, employers, practical supervisors and other external stakeholders. Uses formal Dutch (u/uw).",
     subject: "Uw verificatiecode voor Groeibaas",
     preheader: "Gebruik deze code om uw login bij Groeibaas te bevestigen.",
     title: "Uw verificatiecode voor Groeibaas",

@@ -66,7 +66,7 @@ export function EmailPreview() {
         {/* Variant tabs */}
         <div
           role="tablist"
-          aria-label="E-mailvariant"
+          aria-label="Email variant"
           className="inline-flex rounded-lg bg-muted p-1"
         >
           {(Object.keys(variants) as EmailVariant[]).map((key) => {
@@ -95,13 +95,13 @@ export function EmailPreview() {
             onClick={() => setUseSample((v) => !v)}
             className="rounded-lg border border-border bg-card px-3 py-2 text-xs font-medium text-muted-foreground transition-colors hover:text-primary"
           >
-            {useSample ? "Toon {{code}}" : "Toon voorbeeld 606219"}
+            {useSample ? "Show {{code}}" : "Show sample 606219"}
           </button>
 
           {/* Device toggle */}
           <div className="inline-flex rounded-lg bg-muted p-1">
             <button
-              aria-label="Desktopweergave"
+              aria-label="Desktop view"
               aria-pressed={device === "desktop"}
               onClick={() => setDevice("desktop")}
               className={`rounded-md p-2 transition-colors ${
@@ -113,7 +113,7 @@ export function EmailPreview() {
               <Monitor className="size-4" />
             </button>
             <button
-              aria-label="Mobiele weergave"
+              aria-label="Mobile view"
               aria-pressed={device === "mobile"}
               onClick={() => setDevice("mobile")}
               className={`rounded-md p-2 transition-colors ${
@@ -136,7 +136,7 @@ export function EmailPreview() {
             ) : (
               <Copy className="size-4" />
             )}
-            {copied ? "Gekopieerd" : "Kopieer HTML"}
+            {copied ? "Copied" : "Copy HTML"}
           </button>
         </div>
       </div>
@@ -148,13 +148,13 @@ export function EmailPreview() {
         </span>
         <div className="min-w-0">
           <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-            Onderwerp
+            Subject
           </p>
           <p className="truncate font-serif text-base font-semibold text-primary">
             {active.subject}
           </p>
           <p className="mt-1 text-sm text-muted-foreground">
-            Doelgroep: {active.audience}
+            Audience: {active.audience}
           </p>
         </div>
       </div>
@@ -167,7 +167,7 @@ export function EmailPreview() {
         >
           <iframe
             key={`${variant}-${device}-${useSample}`}
-            title={`Voorbeeld: ${active.label}`}
+            title={`Preview: ${active.label}`}
             srcDoc={previewHtml}
             className="h-[720px] w-full rounded-lg border border-border bg-white shadow-sm sm:h-[820px]"
           />
