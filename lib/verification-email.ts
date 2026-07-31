@@ -99,19 +99,13 @@ export function buildEmailHtml(variant: EmailVariant, code = "{{code}}"): string
         <table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0" style="width:600px; max-width:600px; background-color:${brand.card}; border:1px solid ${brand.border}; border-radius:16px; overflow:hidden;">
           <!-- Header -->
           <tr>
-            <td style="background-color:${brand.navy}; padding:28px 32px;">
+            <td style="background-color:${brand.card}; padding:24px 32px;">
               <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
                 <tr>
                   <td align="left" style="vertical-align:middle;">
-                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="background-color:${brand.card}; border-radius:10px;">
-                      <tr>
-                        <td style="padding:10px 16px; line-height:0;">
-                          <img src="${logoUrl}" width="150" alt="Nederlands de Baas" style="display:block; border:0; height:auto; max-width:150px;" />
-                        </td>
-                      </tr>
-                    </table>
+                    <img src="${logoUrl}" width="150" alt="Nederlands de Baas" style="display:block; border:0; height:auto; max-width:150px;" />
                   </td>
-                  <td align="right" style="vertical-align:middle; font-family:${fontStack}; font-size:13px; font-weight:600; letter-spacing:0.5px; color:${brand.teal}; text-transform:uppercase;">
+                  <td align="right" style="vertical-align:middle; font-family:${fontStack}; font-size:13px; font-weight:700; letter-spacing:1px; color:${brand.navy}; text-transform:uppercase;">
                     Groeibaas
                   </td>
                 </tr>
