@@ -25,9 +25,38 @@ export function EmailPreview() {
 
   async function handleCopy() {
     // Always copy the template with the {{code}} placeholder for real use.
-    await navigator.clipboard.writeText(buildEmailHtml(variant, "{{code}}"))
-    setCopied(true)
-    setTimeout(() => setCopied(false), 2000)
+    const html = buildEmailHtml(variant, "{{code}}")
+
+    try {
+      // Modern API — may be blocked by permissions policy inside iframes.
+      if (navigator.clipboard && window.isSecureContext) {
+        await navigator.clipboard.writeText(html)
+        setCopied(true)
+        setTimeout(() => setCopied(false), 2000)
+        return
+      }
+      throw new Error("Clipboard API unavailable")
+    } catch {
+      // Fallback: hidden textarea + execCommand for restricted contexts.
+      try {
+        const textarea = document.createElement("textarea")
+        textarea.value = html
+        textarea.setAttribute("readonly", "")
+        textarea.style.position = "fixed"
+        textarea.style.top = "-9999px"
+        textarea.style.opacity = "0"
+        document.body.appendChild(textarea)
+        textarea.focus()
+        textarea.select()
+        const ok = document.execCommand("copy")
+        document.body.removeChild(textarea)
+        if (!ok) throw new Error("execCommand copy failed")
+        setCopied(true)
+        setTimeout(() => setCopied(false), 2000)
+      } catch {
+        console.log("[v0] Copy failed in this environment")
+      }
+    }
   }
 
   return (
