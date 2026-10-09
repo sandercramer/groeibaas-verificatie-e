@@ -17,9 +17,9 @@ const poppins = Poppins({
 })
 
 export const metadata: Metadata = {
-  title: 'Groeibaas · Verificatiecode e-mail',
+  title: 'Groeibaas · Email templates',
   description:
-    'Verificatiecode e-mailtemplate voor Groeibaas, de voortgangstool van Nederlands de Baas.',
+    'Verification code and student invitation email templates for Groeibaas, the progress tool of Nederlands de Baas.',
   generator: 'v0.app',
   icons: {
     icon: [

@@ -32,7 +32,7 @@ export const brand = {
   destructive: "#E40014",
 } as const
 
-export const productUrl = "https://voortgang.nldb.nl/"
+export const productUrl = "https://groeibaas.nldb.nl/"
 export const logoUrl = "https://concept.nederlandsdebaas.nl/logo-nldb.png"
 
 export const variants: Record<EmailVariant, VariantContent> = {
