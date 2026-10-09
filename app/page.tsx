@@ -28,8 +28,8 @@ export default function Page() {
               Warm, trustworthy email templates in the Nederlands de Baas brand
               style: a verification code email for staff and external users,
               and an invitation email for students. Ready to export as
-              email-safe HTML. The email copy itself is in Dutch for the
-              recipients.
+              email-safe HTML. The verification email is in Dutch; the student
+              emails are available in ten languages (Dutch is the default).
             </p>
           </div>
         </div>

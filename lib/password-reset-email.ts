@@ -6,57 +6,52 @@ import {
   escapeHtml,
   noticeBlock,
   paragraph,
+  startSide,
   stepsBlock,
 } from "@/lib/email-shell"
+import { commonStrings } from "@/lib/i18n/common"
+import { passwordResetStrings } from "@/lib/i18n/password-reset"
+import { defaultLocale, getLocale, type Locale } from "@/lib/i18n/locales"
 
 export const passwordResetPlaceholders = ["{{first_name}}", "{{reset_url}}"] as const
 
-export const passwordResetContent = {
+export const passwordResetMeta = {
   label: "New password",
   description: "Link to create a new password in the app.",
   audience:
-    "Students (adult learners). Simple, informal Dutch (je/jij) for readers with Dutch as a second language and limited digital skills.",
-  subject: "Maak een nieuw wachtwoord voor Groeibaas",
-  preheader: "Klik op de knop om een nieuw wachtwoord te maken.",
-  title: "Nieuw wachtwoord maken",
-  intro: "Je wilt een nieuw wachtwoord voor de Groeibaas app.",
-  ctaIntro: "Klik op de knop. Dan kun je een nieuw wachtwoord maken.",
-  ctaLabel: "Maak nieuw wachtwoord",
-  steps: [
-    "Klik op Maak nieuw wachtwoord.",
-    "Kies een nieuw wachtwoord. Kies een wachtwoord dat alleen jij weet.",
-    "Open de Groeibaas app en log in met je nieuwe wachtwoord.",
-  ],
-  expiry: "De link werkt maar 1 keer en is maar kort geldig.",
-  notRequested:
-    "Heb je dit niet gevraagd? Dan hoef je niets te doen. Je wachtwoord blijft hetzelfde.",
-  fallback: "Werkt de knop niet? Kopieer deze link en plak hem in je browser:",
-  help: "Lukt het niet? Vraag hulp aan je docent, trajectbegeleider of Nederlands de Baas.",
-  footerTagline: "Groeibaas – jouw voortgang in taal en participatie",
+    "Students (adult learners). Simple, informal language (je/jij) for readers with limited Dutch and limited digital skills. Send in the student's preferred language; Dutch is the default.",
 } as const
 
+export const getPasswordResetContent = (locale: Locale) => passwordResetStrings[locale]
+
 export function buildPasswordResetHtml({
+  locale = defaultLocale,
   firstName = "{{first_name}}",
   resetUrl = "{{reset_url}}",
-}: { firstName?: string; resetUrl?: string } = {}): string {
-  const c = passwordResetContent
+}: { locale?: Locale; firstName?: string; resetUrl?: string } = {}): string {
+  const c = passwordResetStrings[locale]
+  const common = commonStrings[locale]
+  const info = getLocale(locale)
+  const { dir } = info
   const url = escapeHtml(resetUrl)
+  const arrow = dir === "rtl" ? "&larr;" : "&rarr;"
 
   return buildEmailShell({
+    locale: info,
     subject: c.subject,
     preheader: c.preheader,
     title: c.title,
-    footerTagline: c.footerTagline,
+    footerTagline: common.footerTagline,
     sections: [
-      paragraph(`Hallo ${escapeHtml(firstName)},`, { bold: true, size: 17 }) +
+      paragraph(common.greeting(escapeHtml(firstName)), { bold: true, size: 17 }) +
         paragraph(c.intro, { size: 17 }) +
         paragraph(c.ctaIntro, { bottom: 0 }),
-      ctaButton(url, `${c.ctaLabel} &rarr;`),
-      stepsBlock("Zo werkt het", c.steps),
-      noticeBlock("Let op.", `${c.expiry} ${c.notRequested}`),
+      ctaButton(url, `${c.ctaLabel} ${arrow}`),
+      stepsBlock(common.stepsTitle, c.steps, dir),
+      noticeBlock(common.noticeLabel, `${c.expiry} ${c.notRequested}`, dir),
       paragraph(c.fallback, { muted: true, size: 14, bottom: 6 }) +
-        `<p style="margin:0 0 20px 0; font-family:${bodyFont}; font-size:14px; line-height:1.6; word-break:break-all;"><a href="${url}" target="_blank" style="color:${brand.navy}; font-weight:600; text-decoration:underline;">${url}</a></p>` +
-        `<p style="margin:0; padding-top:16px; border-top:1px solid ${brand.border}; font-family:${bodyFont}; font-size:14px; line-height:1.6; color:${brand.mutedForeground};">${c.help}</p>`,
+        `<p dir="ltr" style="margin:0 0 20px 0; font-family:${bodyFont}; font-size:14px; line-height:1.6; word-break:break-all; text-align:${startSide(dir)};"><a href="${url}" target="_blank" style="color:${brand.navy}; font-weight:600; text-decoration:underline;">${url}</a></p>` +
+        `<p style="margin:0; padding-top:16px; border-top:1px solid ${brand.border}; font-family:${bodyFont}; font-size:14px; line-height:1.6; color:${brand.mutedForeground};">${common.help}</p>`,
     ],
   })
 }

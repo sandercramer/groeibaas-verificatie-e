@@ -3,34 +3,37 @@
 import { useMemo, useState } from "react"
 import { Check, Copy, Mail, Monitor, Smartphone } from "lucide-react"
 import { copyToClipboard } from "@/lib/copy-to-clipboard"
+import { LanguageTabs } from "@/components/language-tabs"
+import { defaultLocale, getLocale, type Locale } from "@/lib/i18n/locales"
 
 type TemplatePreviewProps = {
   label: string
-  subject: string
-  preheader: string
   audience: string
   placeholders: readonly string[]
-  buildHtml: (withSampleData: boolean, forExport?: boolean) => string
+  getContent: (locale: Locale) => { subject: string; preheader: string }
+  buildHtml: (locale: Locale, withSampleData: boolean, forExport?: boolean) => string
   note?: string
 }
 
 export function TemplatePreview({
   label,
-  subject,
-  preheader,
   audience,
   placeholders,
+  getContent,
   buildHtml,
   note,
 }: TemplatePreviewProps) {
+  const [locale, setLocale] = useState<Locale>(defaultLocale)
   const [device, setDevice] = useState<"desktop" | "mobile">("desktop")
   const [useSample, setUseSample] = useState(true)
   const [copied, setCopied] = useState(false)
 
-  const previewHtml = useMemo(() => buildHtml(useSample), [buildHtml, useSample])
+  const info = getLocale(locale)
+  const content = getContent(locale)
+  const previewHtml = useMemo(() => buildHtml(locale, useSample), [buildHtml, locale, useSample])
 
   async function handleCopy() {
-    if (await copyToClipboard(buildHtml(false, true))) {
+    if (await copyToClipboard(buildHtml(locale, false, true))) {
       setCopied(true)
       setTimeout(() => setCopied(false), 2000)
     }
@@ -38,6 +41,8 @@ export function TemplatePreview({
 
   return (
     <div className="flex flex-col gap-6">
+      <LanguageTabs value={locale} onChange={setLocale} />
+
       <div className="flex flex-col gap-4 rounded-xl border border-border bg-card p-4 lg:flex-row lg:items-center lg:justify-between">
         <div className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
           <span>Placeholders:</span>
@@ -85,7 +90,7 @@ export function TemplatePreview({
             className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90"
           >
             {copied ? <Check className="size-4" /> : <Copy className="size-4" />}
-            {copied ? "Copied" : "Copy HTML"}
+            {copied ? "Copied" : `Copy HTML (${info.name})`}
           </button>
         </div>
       </div>
@@ -96,13 +101,23 @@ export function TemplatePreview({
         </span>
         <div className="min-w-0">
           <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-            Subject
+            Subject · {info.name} ({info.lang}, {info.dir.toUpperCase()})
           </p>
-          <p className="truncate font-serif text-base font-semibold text-primary">
-            {subject}
+          <p lang={info.lang} dir={info.dir} className="truncate font-serif text-base font-semibold text-primary">
+            {content.subject}
           </p>
-          <p className="mt-1 text-sm text-muted-foreground">Preheader: {preheader}</p>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Preheader:{" "}
+            <span lang={info.lang} dir={info.dir}>
+              {content.preheader}
+            </span>
+          </p>
           <p className="mt-1 text-sm text-muted-foreground">Audience: {audience}</p>
+          {locale !== defaultLocale ? (
+            <p className="mt-2 rounded-md bg-accent/15 px-3 py-2 text-sm text-primary">
+              Draft translation — have a native {info.name} speaker review it before sending.
+            </p>
+          ) : null}
           {note ? (
             <p className="mt-2 rounded-md bg-muted px-3 py-2 text-sm text-primary">{note}</p>
           ) : null}
@@ -115,10 +130,10 @@ export function TemplatePreview({
           style={{ maxWidth: device === "mobile" ? 360 : 640 }}
         >
           <iframe
-            key={`${device}-${useSample}`}
-            title={`Preview: ${label}`}
+            key={`${locale}-${device}-${useSample}`}
+            title={`Preview: ${label} (${info.name})`}
             srcDoc={previewHtml}
-            className="h-[1600px] w-full rounded-lg border border-border bg-white shadow-sm sm:h-[1450px]"
+            className="h-[1650px] w-full rounded-lg border border-border bg-white shadow-sm sm:h-[1500px]"
           />
         </div>
       </div>
