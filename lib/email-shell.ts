@@ -1,4 +1,9 @@
 import { brand, logoUrl, productUrl } from "@/lib/verification-email"
+import { getLocale, type LocaleInfo } from "@/lib/i18n/locales"
+
+export type TextDirection = "ltr" | "rtl"
+
+export const startSide = (dir: TextDirection) => (dir === "rtl" ? "right" : "left")
 
 export const headingFont = "'Poppins', Arial, Helvetica, sans-serif"
 export const bodyFont = "'Inter', Arial, Helvetica, sans-serif"
@@ -30,12 +35,13 @@ export function ctaButton(href: string, label: string, variant: "primary" | "acc
               </table>`
 }
 
-export function stepsBlock(title: string, steps: readonly string[]) {
+export function stepsBlock(title: string, steps: readonly string[], dir: TextDirection = "ltr") {
+  const numberPadding = dir === "rtl" ? "6px 0 6px 12px" : "6px 12px 6px 0"
   const rows = steps
     .map(
       (step, index) => `
                 <tr>
-                  <td width="40" style="width:40px; padding:6px 12px 6px 0; vertical-align:top;">
+                  <td width="40" style="width:40px; padding:${numberPadding}; vertical-align:top;">
                     <table role="presentation" cellpadding="0" cellspacing="0" border="0">
                       <tr>
                         <td align="center" width="28" height="28" style="width:28px; height:28px; background-color:${brand.teal}; border-radius:14px; font-family:${headingFont}; font-size:14px; font-weight:700; line-height:28px; color:${brand.navy};">${index + 1}</td>
@@ -57,8 +63,8 @@ export function stepsBlock(title: string, steps: readonly string[]) {
               </table>`
 }
 
-export function noticeBlock(label: string, text: string) {
-  return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:${brand.muted}; border-left:4px solid ${brand.teal}; border-radius:10px;">
+export function noticeBlock(label: string, text: string, dir: TextDirection = "ltr") {
+  return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:${brand.muted}; border-${startSide(dir)}:4px solid ${brand.teal}; border-radius:10px;">
                 <tr>
                   <td style="padding:16px 20px; font-family:${bodyFont}; font-size:15px; line-height:1.6; color:${brand.navy};">
                     <strong style="color:${brand.navy};">${label}</strong> ${text}
@@ -74,13 +80,16 @@ export function buildEmailShell({
   title,
   sections,
   footerTagline,
+  locale = getLocale("nl"),
 }: {
   subject: string
   preheader: string
   title: string
   sections: string[]
   footerTagline: string
+  locale?: LocaleInfo
 }) {
+  const { dir } = locale
   const sectionRows = sections
     .map(
       (html, index) => `
@@ -92,8 +101,8 @@ export function buildEmailShell({
     )
     .join("")
 
-  return `<!DOCTYPE html>
-<html lang="nl">
+  const html = `<!DOCTYPE html>
+<html lang="${locale.lang}" dir="${dir}">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -117,11 +126,11 @@ export function buildEmailShell({
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:${brand.background};">
     <tr>
       <td align="center" style="padding:32px 16px;">
-        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" class="gb-container" style="width:100%; max-width:600px; background-color:${brand.card}; border:1px solid ${brand.border}; border-radius:16px; overflow:hidden;">
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" class="gb-container" dir="${dir}" style="width:100%; max-width:600px; background-color:${brand.card}; border:1px solid ${brand.border}; border-radius:16px; overflow:hidden; direction:${dir}; text-align:${startSide(dir)};">
           <!-- Header -->
           <tr>
             <td class="gb-pad" style="background-color:${brand.card}; padding:24px 32px;">
-              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" dir="ltr" style="direction:ltr;">
                 <tr>
                   <td align="left" style="vertical-align:middle; font-family:${headingFont}; font-size:18px; font-weight:700; color:${brand.navy};">
                     <img src="${logoUrl}" width="150" alt="Nederlands de Baas" style="display:block; border:0; height:auto; max-width:150px;" />
@@ -146,7 +155,7 @@ export function buildEmailShell({
             <td class="gb-pad" style="background-color:${brand.navy}; padding:28px 32px;">
               <p style="margin:0 0 4px 0; font-family:${headingFont}; font-size:15px; font-weight:600; color:${brand.primaryForeground};">Nederlands de Baas</p>
               <p style="margin:0 0 12px 0; font-family:${bodyFont}; font-size:13px; line-height:1.5; color:${brand.secondary};">${footerTagline}</p>
-              <a href="${productUrl}" style="font-family:${bodyFont}; font-size:13px; font-weight:600; color:${brand.teal}; text-decoration:none;">${productUrl}</a>
+              <a href="${productUrl}" dir="ltr" style="font-family:${bodyFont}; font-size:13px; font-weight:600; color:${brand.teal}; text-decoration:none;">${productUrl}</a>
             </td>
           </tr>
         </table>
@@ -155,4 +164,8 @@ export function buildEmailShell({
   </table>
 </body>
 </html>`
+
+  return locale.fontStack
+    ? html.split(headingFont).join(locale.fontStack).split(bodyFont).join(locale.fontStack)
+    : html
 }

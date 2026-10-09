@@ -6,38 +6,43 @@ import { EmailPreview } from "@/components/email-preview"
 import { TemplatePreview } from "@/components/template-preview"
 import {
   buildInvitationHtml,
-  invitationContent,
+  getInvitationContent,
+  invitationMeta,
   invitationPlaceholders,
 } from "@/lib/invitation-email"
 import {
   buildPasswordResetHtml,
-  passwordResetContent,
+  getPasswordResetContent,
+  passwordResetMeta,
   passwordResetPlaceholders,
 } from "@/lib/password-reset-email"
+import type { Locale } from "@/lib/i18n/locales"
 
 const SAMPLE_NAME = "Amina"
 
 // Preview iframes (srcdoc) resolve relative URLs against this app, so the badges load
 // from /public here; exported HTML points at the production host instead.
-const buildInvitationPreview = (withSample: boolean, forExport = false) => {
+const buildInvitationPreview = (locale: Locale, withSample: boolean, forExport = false) => {
   const assetBaseUrl = forExport ? undefined : ""
   return withSample
     ? buildInvitationHtml({
+        locale,
         firstName: SAMPLE_NAME,
         username: "amina.yusuf",
         temporaryPassword: "Groei-4827",
         assetBaseUrl,
       })
-    : buildInvitationHtml({ assetBaseUrl })
+    : buildInvitationHtml({ locale, assetBaseUrl })
 }
 
-const buildPasswordResetPreview = (withSample: boolean) =>
+const buildPasswordResetPreview = (locale: Locale, withSample: boolean) =>
   withSample
     ? buildPasswordResetHtml({
+        locale,
         firstName: SAMPLE_NAME,
         resetUrl: "https://groeibaas.nldb.nl/wachtwoord/8f3k2a",
       })
-    : buildPasswordResetHtml()
+    : buildPasswordResetHtml({ locale })
 
 const templates = [
   {
@@ -48,14 +53,14 @@ const templates = [
   },
   {
     id: "invitation",
-    label: `Student · ${invitationContent.label}`,
-    description: invitationContent.description,
+    label: `Student · ${invitationMeta.label}`,
+    description: invitationMeta.description,
     icon: Smartphone,
   },
   {
     id: "password-reset",
-    label: `Student · ${passwordResetContent.label}`,
-    description: passwordResetContent.description,
+    label: `Student · ${passwordResetMeta.label}`,
+    description: passwordResetMeta.description,
     icon: LockKeyhole,
   },
 ] as const
@@ -101,21 +106,19 @@ export function TemplateSwitcher() {
       {active === "verification" && <EmailPreview />}
       {active === "invitation" && (
         <TemplatePreview
-          label={invitationContent.label}
-          subject={invitationContent.subject}
-          preheader={invitationContent.preheader}
-          audience={invitationContent.audience}
+          label={invitationMeta.label}
+          getContent={getInvitationContent}
+          audience={invitationMeta.audience}
           placeholders={invitationPlaceholders}
           buildHtml={buildInvitationPreview}
-          note="The Google Play and App Store links are fixed in the template. The exported HTML loads the store badges from https://groeibaas.nldb.nl/images/badges/ — host google-play-nl.png and app-store.png (in /public/images/badges) there."
+          note="The Google Play and App Store links are fixed in the template. The exported HTML loads the store badges from https://groeibaas.nldb.nl/images/badges/ — host google-play-nl.png and app-store.png (in /public/images/badges) there. The badge images are the same for every language; only their alt text is translated."
         />
       )}
       {active === "password-reset" && (
         <TemplatePreview
-          label={passwordResetContent.label}
-          subject={passwordResetContent.subject}
-          preheader={passwordResetContent.preheader}
-          audience={passwordResetContent.audience}
+          label={passwordResetMeta.label}
+          getContent={getPasswordResetContent}
+          audience={passwordResetMeta.audience}
           placeholders={passwordResetPlaceholders}
           buildHtml={buildPasswordResetPreview}
         />
