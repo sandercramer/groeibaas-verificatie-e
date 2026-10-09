@@ -2,27 +2,35 @@
 
 import { useMemo, useState } from "react"
 import { Check, Copy, Mail, Monitor, Smartphone } from "lucide-react"
-import { buildInvitationHtml, invitationContent } from "@/lib/invitation-email"
 import { copyToClipboard } from "@/lib/copy-to-clipboard"
 
-const SAMPLE_NAME = "Amina"
-const SAMPLE_URL = "https://voortgang.nldb.nl/uitnodiging/8f3k2a"
+type TemplatePreviewProps = {
+  label: string
+  subject: string
+  preheader: string
+  audience: string
+  placeholders: readonly string[]
+  buildHtml: (withSampleData: boolean, forExport?: boolean) => string
+  note?: string
+}
 
-export function InvitationPreview() {
+export function TemplatePreview({
+  label,
+  subject,
+  preheader,
+  audience,
+  placeholders,
+  buildHtml,
+  note,
+}: TemplatePreviewProps) {
   const [device, setDevice] = useState<"desktop" | "mobile">("desktop")
   const [useSample, setUseSample] = useState(true)
   const [copied, setCopied] = useState(false)
 
-  const previewHtml = useMemo(
-    () =>
-      useSample
-        ? buildInvitationHtml(SAMPLE_NAME, SAMPLE_URL)
-        : buildInvitationHtml(),
-    [useSample],
-  )
+  const previewHtml = useMemo(() => buildHtml(useSample), [buildHtml, useSample])
 
   async function handleCopy() {
-    if (await copyToClipboard(buildInvitationHtml())) {
+    if (await copyToClipboard(buildHtml(false, true))) {
       setCopied(true)
       setTimeout(() => setCopied(false), 2000)
     }
@@ -30,15 +38,17 @@ export function InvitationPreview() {
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex flex-col gap-4 rounded-xl border border-border bg-card p-4 sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex flex-col gap-4 rounded-xl border border-border bg-card p-4 lg:flex-row lg:items-center lg:justify-between">
         <div className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
           <span>Placeholders:</span>
-          <code className="rounded bg-muted px-1.5 py-0.5 font-mono text-xs text-primary">
-            {"{{first_name}}"}
-          </code>
-          <code className="rounded bg-muted px-1.5 py-0.5 font-mono text-xs text-primary">
-            {"{{invite_url}}"}
-          </code>
+          {placeholders.map((placeholder) => (
+            <code
+              key={placeholder}
+              className="rounded bg-muted px-1.5 py-0.5 font-mono text-xs text-primary"
+            >
+              {placeholder}
+            </code>
+          ))}
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
@@ -50,30 +60,24 @@ export function InvitationPreview() {
           </button>
 
           <div className="inline-flex rounded-lg bg-muted p-1">
-            <button
-              aria-label="Desktop view"
-              aria-pressed={device === "desktop"}
-              onClick={() => setDevice("desktop")}
-              className={`rounded-md p-2 transition-colors ${
-                device === "desktop"
-                  ? "bg-card text-primary shadow-sm"
-                  : "text-muted-foreground hover:text-primary"
-              }`}
-            >
-              <Monitor className="size-4" />
-            </button>
-            <button
-              aria-label="Mobile view"
-              aria-pressed={device === "mobile"}
-              onClick={() => setDevice("mobile")}
-              className={`rounded-md p-2 transition-colors ${
-                device === "mobile"
-                  ? "bg-card text-primary shadow-sm"
-                  : "text-muted-foreground hover:text-primary"
-              }`}
-            >
-              <Smartphone className="size-4" />
-            </button>
+            {(["desktop", "mobile"] as const).map((option) => {
+              const Icon = option === "desktop" ? Monitor : Smartphone
+              return (
+                <button
+                  key={option}
+                  aria-label={option === "desktop" ? "Desktop view" : "Mobile view"}
+                  aria-pressed={device === option}
+                  onClick={() => setDevice(option)}
+                  className={`rounded-md p-2 transition-colors ${
+                    device === option
+                      ? "bg-card text-primary shadow-sm"
+                      : "text-muted-foreground hover:text-primary"
+                  }`}
+                >
+                  <Icon className="size-4" />
+                </button>
+              )
+            })}
           </div>
 
           <button
@@ -95,14 +99,13 @@ export function InvitationPreview() {
             Subject
           </p>
           <p className="truncate font-serif text-base font-semibold text-primary">
-            {invitationContent.subject}
+            {subject}
           </p>
-          <p className="mt-1 text-sm text-muted-foreground">
-            Preheader: {invitationContent.preheader}
-          </p>
-          <p className="mt-1 text-sm text-muted-foreground">
-            Audience: {invitationContent.audience}
-          </p>
+          <p className="mt-1 text-sm text-muted-foreground">Preheader: {preheader}</p>
+          <p className="mt-1 text-sm text-muted-foreground">Audience: {audience}</p>
+          {note ? (
+            <p className="mt-2 rounded-md bg-muted px-3 py-2 text-sm text-primary">{note}</p>
+          ) : null}
         </div>
       </div>
 
@@ -113,9 +116,9 @@ export function InvitationPreview() {
         >
           <iframe
             key={`${device}-${useSample}`}
-            title={`Preview: ${invitationContent.label}`}
+            title={`Preview: ${label}`}
             srcDoc={previewHtml}
-            className="h-[1300px] w-full rounded-lg border border-border bg-white shadow-sm sm:h-[1200px]"
+            className="h-[1600px] w-full rounded-lg border border-border bg-white shadow-sm sm:h-[1450px]"
           />
         </div>
       </div>
