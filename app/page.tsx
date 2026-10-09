@@ -1,4 +1,4 @@
-import { EmailPreview } from "@/components/email-preview"
+import { TemplateSwitcher } from "@/components/template-switcher"
 import { DesignSpec } from "@/components/design-spec"
 
 export default function Page() {
@@ -22,20 +22,21 @@ export default function Page() {
           </div>
           <div className="max-w-2xl">
             <h1 className="text-balance font-serif text-3xl font-bold leading-tight text-primary sm:text-4xl">
-              Verification code email
+              Email templates
             </h1>
             <p className="mt-3 text-pretty leading-relaxed text-muted-foreground">
-              A warm, trustworthy email template in the Nederlands de Baas
-              brand style. One base design with two content variants: staff and
-              external users. Ready to export as email-safe HTML. The email
-              copy itself is in Dutch for the recipients.
+              Warm, trustworthy email templates in the Nederlands de Baas brand
+              style: a verification code email for staff and external users,
+              and an invitation email for students. Ready to export as
+              email-safe HTML. The email copy itself is in Dutch for the
+              recipients.
             </p>
           </div>
         </div>
       </header>
 
       <div className="mx-auto flex max-w-5xl flex-col gap-10 px-4 py-8 sm:px-6 sm:py-12">
-        <EmailPreview />
+        <TemplateSwitcher />
 
         <section>
           <h2 className="font-serif text-xl font-semibold text-primary">
@@ -85,11 +86,21 @@ export default function Page() {
             <li className="flex gap-3">
               <span className="mt-2 size-1.5 shrink-0 rounded-full bg-accent" />
               <span>
-                Replace the placeholder{" "}
+                Replace the placeholders{" "}
                 <code className="rounded bg-muted px-1.5 py-0.5 font-mono text-xs text-primary">
                   {"{{code}}"}
+                </code>
+                ,{" "}
+                <code className="rounded bg-muted px-1.5 py-0.5 font-mono text-xs text-primary">
+                  {"{{first_name}}"}
                 </code>{" "}
-                in your mail program or ESP with the real verification code.
+                and{" "}
+                <code className="rounded bg-muted px-1.5 py-0.5 font-mono text-xs text-primary">
+                  {"{{invite_url}}"}
+                </code>{" "}
+                in your mail program or ESP with real values. The invitation
+                CTA is a bulletproof table button, so it renders without
+                images or CSS support.
               </span>
             </li>
             <li className="flex gap-3">
